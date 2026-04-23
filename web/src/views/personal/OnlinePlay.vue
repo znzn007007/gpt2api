@@ -1324,7 +1324,8 @@ watch(activeTab, (v) => {
   grid-template-columns: 340px minmax(0, 1fr);
   gap: 16px;
 }
-.img-main { min-height: 560px; }
+/* img-main 高度随内容自适应，stage（空态/loading）保留最小高度 */
+.img-main { min-height: 0; }
 
 /* 比例按钮 —— 10 档预设,5 列 × 2 行 grid */
 .ratio-row {
@@ -1445,7 +1446,7 @@ watch(activeTab, (v) => {
 
 /* 主区 stage / 结果 */
 .stage {
-  min-height: 480px;
+  min-height: 440px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center; color: var(--el-text-color-secondary); padding: 40px 24px;
   .stage-art { font-size: 64px; margin-bottom: 16px; opacity: 0.7; }
@@ -1476,22 +1477,27 @@ watch(activeTab, (v) => {
   border: 1px solid var(--el-color-danger-light-5);
 }
 
+/* 结果网格:1 张→铺满,2 张→各占一半,3-4 张→2 列自动换行 */
 .result-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
   gap: 14px;
   padding: 4px;
+  align-items: start;
 }
 .img-cell {
   position: relative;
-  aspect-ratio: 1;
   border-radius: 12px;
   overflow: hidden;
   cursor: zoom-in;
   background: var(--el-fill-color-light);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.2s;
+  /* 不再强制 aspect-ratio:1,让图片以原始宽高比自然撑开 */
   img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
+    width: 100%;
+    height: auto;
+    display: block;
     transition: transform 0.4s;
   }
   &:hover {
